@@ -50,7 +50,35 @@ class UserController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Logic for saving/updating a user and their permissions
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'username' => 'required|string|max:255|unique:users,username,' . ($request->user_id ?? 'NULL') . ',id',
+        'email' => 'nullable|email|unique:users,email,' . ($request->user_id ?? 'NULL') . ',id',
+        'branch' => 'nullable|string|max:255',
+        'password' => $request->user_id ? 'nullable|min:6' : 'required|min:6',
+        'permissions' => 'array',
+    ]);
+
+    // If user_id is present, we’re updating an existing user
+    $user = $request->user_id ? User::find($request->user_id) : new User();
+
+    $user->name = $validated['name'];
+    $user->username = $validated['username'];
+    $user->email = $validated['email'] ?? $user->email;
+    $user->branch = $validated['branch'] ?? '';
+    
+    // Update password only if provided
+    if (!empty($validated['password'])) {
+        $user->password = bcrypt($validated['password']);
     }
+
+    $user->save();
+
+    // Sync Permissions
+    $user->permissions()->sync($validated['permissions'] ?? []);
+
+    return redirect()->route('admin.user_manager')->with('success', 'User saved successfully!');
+}
+
 }

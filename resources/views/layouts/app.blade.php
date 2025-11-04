@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>RAI Medical Complex</title>
+    <title>Khazir Hospital</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
 
     <aside class="w-64 bg-gradient-to-br from-blue-700 to-blue-900 text-white shadow-lg flex flex-col rounded-r-xl">
         <div class="p-6 border-b border-blue-800 flex items-center justify-center">
-            <h1 class="text-2xl font-bold tracking-wide">RAI Medical Complex</h1>
+            <h1 class="text-2xl font-bold tracking-wide">KHAZIR HOSPITAL</h1>
         </div>
         <nav class="flex-grow p-4">
             <ul>
@@ -84,7 +84,7 @@
                         <span class="text-lg font-medium">Doctors</span>
                     </a>
                 </li>
-                <li class="mb-2">
+                <li class="mb-2 hidden">
                     <a href="{{ route('day-care.create') }}"
                         class="flex items-center p-3 rounded-lg hover:bg-blue-600 transition-colors duration-200 ease-in-out">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
@@ -103,7 +103,7 @@
                         <span class="text-lg font-medium">Laboratory</span>
                     </a>
                 </li>
-                <li class="mb-2">
+                <li class="mb-2 hidden">
                     <a href="{{ route('store.index') }}"
                         class="flex items-center p-3 rounded-lg hover:bg-blue-600 transition-colors duration-200 ease-in-out">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -115,7 +115,7 @@
                         <span class="text-lg font-medium">Store</span>
                     </a>
                 </li>
-                <li class="mb-2">
+                <li class="mb-2 hidden">
                     <a href="{{ route('admin.user_manager') }}"
                         class="flex items-center p-3 rounded-lg hover:bg-blue-600 transition-colors duration-200 ease-in-out">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
