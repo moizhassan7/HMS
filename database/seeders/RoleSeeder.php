@@ -39,6 +39,7 @@ class RoleSeeder extends Seeder
             // Radiologist Permissions
             ['name' => 'view_radiology_requests', 'group_name' => 'radiology'],
             ['name' => 'upload_radiology_reports', 'group_name' => 'radiology'],
+            ['name' => 'manage_radiology_results', 'group_name' => 'radiology'],
             
             // Pharmacist Permissions
             ['name' => 'view_prescriptions', 'group_name' => 'pharmacy'],
@@ -83,6 +84,7 @@ class RoleSeeder extends Seeder
         $radiologistPermissions = Permission::whereIn('name', [
             'view_radiology_requests',
             'upload_radiology_reports',
+            'manage_radiology_results',
         ])->get();
         $radiologistRole->permissions()->sync($radiologistPermissions);
 

@@ -16,6 +16,7 @@ class PrescriptionMedicine extends Model
         'duration',
         'instruction',
         'dispense_status',
+        'quantity',
     ];
 
     public function prescription()

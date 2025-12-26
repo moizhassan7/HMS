@@ -78,17 +78,8 @@ class PharmacyController extends Controller
                                        ->orderBy('expiry_date', 'asc')
                                        ->get();
 
-                // Assuming dosage string contains quantity info or we have a set standard. 
-                // For simplicity in this demo, we assume 1 unit per item unless parsed.
-                // In a real app, 'dosage' and 'duration' need to be parsed to calculate total qty.
-                // Let's assume for now we deduct 10 units as a placeholder or we need a field 'quantity' in PrescriptionMedicine.
-                // The current PrescriptionMedicine only has dosage/duration strings.
-                // I'll assume we deduct 1 unit per "dispense" action for the demo, or better:
-                // Let's add a logic to just mark it dispensed if we can't calculate quantity, 
-                // BUT for inventory tracking we really need quantity.
-                // Let's assume a default deduction of 1 for now to show logic working.
-                
-                $qtyToDeduct = 1; 
+                // Use the quantity field from PrescriptionMedicine
+                $qtyToDeduct = $pm->quantity ?? 1; // Default to 1 if not set
 
                 $remainingToDeduct = $qtyToDeduct;
 

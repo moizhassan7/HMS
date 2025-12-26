@@ -126,6 +126,7 @@
                         <span class="text-lg font-medium">Emergency Charges</span>
                     </a>
                 </li>
+                @if(Auth::user()->hasPermission('view_lab_requests'))
                 <li class="mb-2">
                     <a href="{{ route('laboratory.index') }}"
                         class="flex items-center p-3 rounded-lg hover:bg-blue-600 transition-colors duration-200 ease-in-out">
@@ -138,6 +139,7 @@
                         <span class="text-lg font-medium">Laboratory</span>
                     </a>
                 </li>
+                @endif
 
                 @if(Auth::user()->hasPermission('view_radiology_requests'))
                 <li class="mb-2">

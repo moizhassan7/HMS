@@ -4,9 +4,14 @@
 <div class="container mx-auto px-4 py-6">
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-3xl font-bold text-gray-800">Pharmacy Inventory</h2>
-        <a href="{{ route('pharmacy.dispense_index') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
-            Dispense Medicines
-        </a>
+        <div class="flex space-x-4">
+            <a href="{{ route('pharmacy.medicines') }}" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                Add Medicine
+            </a>
+            <a href="{{ route('pharmacy.dispense_index') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-colors duration-200">
+                Dispense Medicines
+            </a>
+        </div>
     </div>
 
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">

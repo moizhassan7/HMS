@@ -37,6 +37,108 @@ class LaboratoryController extends Controller
     }
 
     /**
+     * Display pending pathology requests from prescriptions.
+     */
+    public function index()
+    {
+        return view('laboratory.index');
+    }
+
+    /**
+     * Search for a patient and show pending pathology tests.
+     */
+    public function searchPatient(Request $request)
+    {
+        $mr_no = $request->input('mr_no');
+        $patient = null;
+        $pendingTests = collect();
+
+        if ($mr_no) {
+            $patient = \App\Models\Patient::where('mr_number', $mr_no)->first();
+
+            if ($patient) {
+                // Get pending pathology tests from prescriptions
+                $pendingTests = \App\Models\PrescriptionTest::where('type', 'pathology')
+                    ->where('status', 'pending')
+                    ->whereHas('prescription', function($q) use ($patient) {
+                        $q->where('patient_id', $patient->id);
+                    })
+                    ->with(['prescription.doctor', 'test'])
+                    ->get();
+            }
+        }
+
+        return view('laboratory.index', compact('patient', 'pendingTests', 'mr_no'));
+    }
+
+    /**
+     * Show form for entering results for prescription-based tests.
+     */
+    public function enterPrescriptionTestResults($patient_id, $test_id)
+    {
+        $patient = Patient::findOrFail($patient_id);
+        $test = Test::findOrFail($test_id);
+
+        // Get the prescription test record
+        $prescriptionTest = PrescriptionTest::where('test_id', $test_id)
+            ->whereHas('prescription', function($q) use ($patient_id) {
+                $q->where('patient_id', $patient_id);
+            })
+            ->where('type', 'pathology')
+            ->where('status', 'pending')
+            ->firstOrFail();
+
+        return view('laboratory.prescription_result_form', compact('patient', 'test', 'prescriptionTest'));
+    }
+
+    /**
+     * Store results for prescription-based tests.
+     */
+    public function storePrescriptionTestResults(Request $request, $patient_id, $test_id)
+    {
+        $patient = Patient::findOrFail($patient_id);
+        $test = Test::findOrFail($test_id);
+
+        $prescriptionTest = PrescriptionTest::where('test_id', $test_id)
+            ->whereHas('prescription', function($q) use ($patient_id) {
+                $q->where('patient_id', $patient_id);
+            })
+            ->where('type', 'pathology')
+            ->where('status', 'pending')
+            ->firstOrFail();
+
+        $request->validate([
+            'results' => 'required|array',
+            'results.*' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            foreach ($request->results as $particularId => $result) {
+                TestResult::create([
+                    'laboratory_patient_id' => null, // Since it's not from lab patient
+                    'test_id' => $test_id,
+                    'test_particular_id' => $particularId,
+                    'result_value' => $result,
+                    'prescription_test_id' => $prescriptionTest->id, // Add this field if needed
+                ]);
+            }
+
+            $prescriptionTest->status = 'completed';
+            $prescriptionTest->save();
+
+            DB::commit();
+
+            return redirect()->route('laboratory.index')->with('success', 'Test results saved successfully.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Error saving results: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Store a new patient registration.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -67,7 +169,7 @@ class LaboratoryController extends Controller
 
             // Decode the JSON string back into a PHP array
             $selectedTests = json_decode($validatedData['tests'], true);
-            
+
             // Transform the `carry_out` string to a boolean for the database.
             $selectedTestsWithBoolean = collect($selectedTests)->map(function ($test) {
                 $test['carry_out'] = filter_var($test['carry_out'], FILTER_VALIDATE_BOOLEAN);
@@ -95,7 +197,7 @@ class LaboratoryController extends Controller
             ]);
 
             return redirect()->route('laboratory.patient_registration')->with('success', 'Patient registration saved successfully!');
-            
+
         } catch (ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         }

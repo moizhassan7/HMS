@@ -31,6 +31,7 @@ use App\Http\Controllers\ResultEntryController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\PharmacyController;
 use App\Http\Controllers\RadiologyController;
+use App\Http\Controllers\MedicineController;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -202,9 +203,10 @@ Route::prefix('admin')->group(function () {
 // Laboratory Module Routes
 Route::prefix('laboratory')->group(function () {
     // Laboratory Management Dashboard Route
-    Route::get('/', function () {
-        return view('laboratory.index');
-    })->name('laboratory.index');
+    Route::get('/', [LaboratoryController::class, 'index'])->name('laboratory.index');
+    Route::post('/search-patient', [LaboratoryController::class, 'searchPatient'])->name('laboratory.search_patient');
+    Route::get('/prescription-results/{patient_id}/{test_id}', [LaboratoryController::class, 'enterPrescriptionTestResults'])->name('laboratory.prescription_results.form');
+    Route::post('/prescription-results/{patient_id}/{test_id}', [LaboratoryController::class, 'storePrescriptionTestResults'])->name('laboratory.prescription_results.store');
 // In routes/web.php inside the 'laboratory' group
 Route::get('/manage-test-head', [TestHeadController::class, 'index'])->name('test_head');
 Route::get('/manage-test-head/{testHead}/edit', [TestHeadController::class, 'edit'])->name('test_head.edit');
@@ -374,6 +376,11 @@ Route::middleware(['auth', 'has_permission:prescribe_medicine'])->prefix('prescr
 // Pharmacy
 Route::middleware(['auth', 'has_permission:manage_pharmacy_stock'])->prefix('pharmacy')->group(function () {
     Route::get('/', [PharmacyController::class, 'index'])->name('pharmacy.index');
+    Route::get('/medicines', [MedicineController::class, 'add'])->name('pharmacy.medicines');
+    Route::get('/medicines/{medicine}/edit', [MedicineController::class, 'add'])->name('pharmacy.medicines.edit');
+    Route::post('/medicines', [MedicineController::class, 'store'])->name('pharmacy.medicines.store');
+    Route::put('/medicines/{medicine}', [MedicineController::class, 'update'])->name('pharmacy.medicines.update');
+    Route::delete('/medicines/{medicine}', [MedicineController::class, 'destroy'])->name('pharmacy.medicines.destroy');
     Route::get('/dispense', [PharmacyController::class, 'dispenseIndex'])->name('pharmacy.dispense_index');
     Route::get('/dispense/{id}', [PharmacyController::class, 'dispense'])->name('pharmacy.dispense');
     Route::post('/dispense/{id}', [PharmacyController::class, 'storeDispense'])->name('pharmacy.dispense.store');

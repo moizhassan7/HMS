@@ -60,6 +60,7 @@ class PrescriptionController extends Controller
             'medicines.*.medicine_id' => 'required|exists:medicines,id',
             'medicines.*.dosage' => 'required|string',
             'medicines.*.duration' => 'required|string',
+            'medicines.*.quantity' => 'required|integer|min:1',
             'pathology_tests' => 'nullable|array',
             'pathology_tests.*' => 'exists:tests,id',
             'radiology_tests' => 'nullable|array',

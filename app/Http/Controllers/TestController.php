@@ -49,7 +49,7 @@ class TestController extends Controller
             'test_price' => 'required|numeric|min:0',
             'test_type' => 'required|string|max:255',
             'test_head_id' => 'required|exists:test_heads,id',
-            'priority' => 'required|string|max:255',
+            'priority' => 'required|integer|in:0,1,2',
             'report_time' => 'required|integer|min:0',
         ]);
 
@@ -81,7 +81,7 @@ class TestController extends Controller
             'test_price' => 'required|numeric|min:0',
             'test_type' => 'required|string|max:255',
             'test_head_id' => 'required|exists:test_heads,id',
-            'priority' => 'required|string|max:255',
+            'priority' => 'required|integer|in:0,1,2',
             'report_time' => 'required|integer|min:0',
         ]);
 

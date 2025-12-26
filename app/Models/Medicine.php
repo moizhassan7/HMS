@@ -14,5 +14,23 @@ class Medicine extends Model
         'description',
         'generic_name',
         'manufacturer',
+        'category_id',
+        'location_id',
+        'min_stock_level',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
+    public function stocks()
+    {
+        return $this->hasMany(PharmacyStock::class);
+    }
 }

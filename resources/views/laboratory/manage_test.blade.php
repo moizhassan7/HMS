@@ -75,9 +75,9 @@
                     <label for="priority" class="block text-gray-700 text-sm font-bold mb-2">Priority:</label>
                     <select id="priority" name="priority" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
                         <option value="">Select Priority</option>
-                        <option value="Routine" {{ (old('priority', $test->priority ?? '') == 'Routine') ? 'selected' : '' }}>Routine</option>
-                        <option value="Urgent" {{ (old('priority', $test->priority ?? '') == 'Urgent') ? 'selected' : '' }}>Urgent</option>
-                        <option value="STAT" {{ (old('priority', $test->priority ?? '') == 'STAT') ? 'selected' : '' }}>STAT (Critical)</option>
+                        <option value="0" {{ (old('priority', $test->priority ?? '') == 0) ? 'selected' : '' }}>Routine</option>
+                        <option value="1" {{ (old('priority', $test->priority ?? '') == 1) ? 'selected' : '' }}>Urgent</option>
+                        <option value="2" {{ (old('priority', $test->priority ?? '') == 2) ? 'selected' : '' }}>STAT (Critical)</option>
                     </select>
                 </div>
                 <div>
@@ -119,7 +119,17 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rs {{ number_format($test->price, 2) }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $test->type }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $test->testHead->name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $test->priority }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                @if($test->priority == 0)
+                                    Routine
+                                @elseif($test->priority == 1)
+                                    Urgent
+                                @elseif($test->priority == 2)
+                                    STAT (Critical)
+                                @else
+                                    Unknown
+                                @endif
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $test->report_time }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <a href="{{ route('laboratory.manage_test.edit', $test->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
