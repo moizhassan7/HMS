@@ -169,6 +169,9 @@ class PatientController extends Controller
         $data = $request->except(['age']);
         $data['age'] = $age;
 
+        // Set patient_type based on is_welfare
+        $data['patient_type'] = $request->is_welfare ? 'Welfare' : 'Normal';
+
         // Create a new patient record with the validated data and calculated age
         Patient::create($data);
 

@@ -28,6 +28,9 @@ use App\Http\Controllers\TestParticularController;
 use App\Http\Controllers\LaboratoryController;
 use App\Http\Controllers\LabAttendantController;
 use App\Http\Controllers\ResultEntryController;
+use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\PharmacyController;
+use App\Http\Controllers\RadiologyController;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -359,6 +362,28 @@ Route::prefix('lab-attendant')->name('lab-attendant.')->group(function () {
     Route::get('/', [LabAttendantController::class, 'index'])->name('index');
     Route::get('/get-patient-tests/{mr_no}', [LabAttendantController::class, 'getPatientTests'])->name('get-patient-tests');
     Route::post('/save-result', [LabAttendantController::class, 'saveResult'])->name('save-result');
+});
+
+// Prescriptions
+Route::middleware(['auth', 'has_permission:prescribe_medicine'])->prefix('prescriptions')->group(function () {
+    Route::get('/', [PrescriptionController::class, 'index'])->name('prescriptions.index');
+    Route::get('/create', [PrescriptionController::class, 'create'])->name('prescriptions.create');
+    Route::post('/', [PrescriptionController::class, 'store'])->name('prescriptions.store');
+});
+
+// Pharmacy
+Route::middleware(['auth', 'has_permission:manage_pharmacy_stock'])->prefix('pharmacy')->group(function () {
+    Route::get('/', [PharmacyController::class, 'index'])->name('pharmacy.index');
+    Route::get('/dispense', [PharmacyController::class, 'dispenseIndex'])->name('pharmacy.dispense_index');
+    Route::get('/dispense/{id}', [PharmacyController::class, 'dispense'])->name('pharmacy.dispense');
+    Route::post('/dispense/{id}', [PharmacyController::class, 'storeDispense'])->name('pharmacy.dispense.store');
+});
+
+// Radiology
+Route::middleware(['auth', 'has_permission:manage_radiology_results'])->prefix('radiology')->group(function () {
+    Route::get('/', [RadiologyController::class, 'index'])->name('radiology.index');
+    Route::get('/results/{id}', [RadiologyController::class, 'enterResults'])->name('radiology.enter_results');
+    Route::post('/results/{id}', [RadiologyController::class, 'storeResults'])->name('radiology.store_results');
 });
 
  
