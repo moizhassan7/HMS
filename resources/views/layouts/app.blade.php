@@ -206,6 +206,7 @@
                         <span class="text-lg font-medium">OPD Consultation</span>
                     </a>
                 </li>
+                @if(Auth::user()->hasPermission('admin_access'))
                 <li class="mb-2">
                     <a href="{{ route('admin.user_manager') }}"
                         class="flex items-center p-3 rounded-lg hover:bg-blue-600 transition-colors duration-200 ease-in-out">
@@ -218,6 +219,7 @@
                         <span class="text-lg font-medium">User Manager</span>
                     </a>
                 </li>
+                @endif
             </ul>
         </nav>
         <div class="p-4 border-t border-blue-800">

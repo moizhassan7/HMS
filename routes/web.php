@@ -193,15 +193,10 @@ Route::prefix('opd')->group(function () {
     })->name('opd.consultation');
 });
 
-// Admin Module Routes
-Route::prefix('admin')->group(function () {
-    Route::get('/user-manager', function () {
-        return view('users.manager');
-    })->name('admin.user_manager');
-});
+
 
 // Laboratory Module Routes
-Route::prefix('laboratory')->group(function () {
+Route::middleware(['auth', 'has_permission:view_lab_requests'])->prefix('laboratory')->group(function () {
     // Laboratory Management Dashboard Route
     Route::get('/', [LaboratoryController::class, 'index'])->name('laboratory.index');
     Route::post('/search-patient', [LaboratoryController::class, 'searchPatient'])->name('laboratory.search_patient');
@@ -311,16 +306,9 @@ Route::prefix('procedures')->group(function () {
     Route::post('/', [ProcedureController::class, 'store'])->name('procedures.store');
     Route::put('/{procedure}', [ProcedureController::class, 'update'])->name('procedures.update');
     Route::delete('/{procedure}', [ProcedureController::class, 'destroy'])->name('procedures.destroy');
-});Route::prefix('procedures')->group(function () {
-    Route::get('/', [ProcedureController::class, 'index'])->name('procedures.index');
-    Route::get('/create', [ProcedureController::class, 'create'])->name('procedures.create');
-    Route::get('/{procedure}/edit', [ProcedureController::class, 'create'])->name('procedures.edit');
-    Route::post('/', [ProcedureController::class, 'store'])->name('procedures.store');
-    Route::put('/{procedure}', [ProcedureController::class, 'update'])->name('procedures.update');
-    Route::delete('/{procedure}', [ProcedureController::class, 'destroy'])->name('procedures.destroy');
 });
 // Admin Module Routes
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'has_permission:admin_access'])->prefix('admin')->group(function () {
     Route::get('/user-manager', [UserController::class, 'manager'])->name('admin.user_manager');
     Route::get('/user-manager/{user}/edit', [UserController::class, 'manager'])->name('admin.user_manager.edit');
     Route::post('/user-manager', [UserController::class, 'store'])->name('admin.user_manager.store');
@@ -387,7 +375,7 @@ Route::middleware(['auth', 'has_permission:manage_pharmacy_stock'])->prefix('pha
 });
 
 // Radiology
-Route::middleware(['auth', 'has_permission:manage_radiology_results'])->prefix('radiology')->group(function () {
+Route::middleware(['auth', 'has_permission:view_radiology_requests'])->prefix('radiology')->group(function () {
     Route::get('/', [RadiologyController::class, 'index'])->name('radiology.index');
     Route::get('/results/{id}', [RadiologyController::class, 'enterResults'])->name('radiology.enter_results');
     Route::post('/results/{id}', [RadiologyController::class, 'storeResults'])->name('radiology.store_results');
